@@ -4,7 +4,6 @@
 import mysql.connector
 from datetime import date
 from datetime import datetime
-
 import pywhatkit
 from PIL import Image
 
@@ -142,6 +141,8 @@ def order(user_id):
         if choice == 0:
             print("Returning to main menu.......")
             break
+        elif choice > len(record):
+            print("Invalid choice......\n\n\n")
         else:
             price = 0
             sql = 'select * from ' + str(record[int(choice - 1)][1]) + ';'
@@ -151,13 +152,18 @@ def order(user_id):
                 print(a, '\t', b, '\t', c)
             n = int(input("enter number of items to order:"))
             item = ''
-            for a in range(n):
+            a = 0
+            while a < n:
                 Sr_no = int(input("enter order id:"))
-                item += record1[Sr_no - 1][1] + '  '
-                sql1 = 'select price from ' + str(record[int(choice - 1)][1]) + ' where Sr_no = ' + str(Sr_no) + ';'
-                cursor.execute(sql1)
-                net = cursor.fetchone()
-                price += int(net[0])
+                if Sr_no > len(record1):
+                    print("Item doesn't exist...\n\n\n")
+                else:
+                    item += record1[Sr_no - 1][1] + '  '
+                    sql1 = 'select price from ' + str(record[int(choice - 1)][1]) + ' where Sr_no = ' + str(Sr_no) + ';'
+                    cursor.execute(sql1)
+                    net = cursor.fetchone()
+                    price += int(net[0])
+                    a += 1
             name = user_id
             sql3 = 'insert into bills(User_id, Canteen,Item, price, doo) values (%s,%s,%s,%s,%s);'
             values = (str(name), str(record[0][1]), item, str(price), str(date.today()))
