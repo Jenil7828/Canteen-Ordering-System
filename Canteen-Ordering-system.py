@@ -4,6 +4,7 @@
 import mysql.connector
 from datetime import date
 from datetime import datetime
+
 import pywhatkit
 from PIL import Image
 
@@ -34,7 +35,7 @@ def Existing_items():
             input("Press any key to continue........")
             break
         else:
-            sql = 'select * from ' + str(record[int(choice)-1][1]) + ';'
+            sql = 'select * from ' + str(record[int(choice) - 1][1]) + ';'
             cursor.execute(sql)
             record1 = cursor.fetchall()
             for a, b, c in record1:
@@ -166,7 +167,7 @@ def order(user_id):
                     a += 1
             name = user_id
             sql3 = 'insert into bills(User_id, Canteen,Item, price, doo) values (%s,%s,%s,%s,%s);'
-            values = (str(name), str(record[0][1]), item, str(price), str(date.today()))
+            values = (str(name), str(record[int(choice)-1][1]), item, str(price), str(date.today()))
             cursor.execute(sql3, values)
             conn.commit()
 
@@ -175,7 +176,7 @@ def order(user_id):
                 now = datetime.now()
                 time_now = now.strftime("%H:%M:%S")
                 hr = int(time_now[0:2])
-                minutes = int(time_now[3:5])+1
+                minutes = int(time_now[3:5]) + 1
                 pywhatkit.sendwhatmsg(str(record[int(choice - 1)][2]), item, hr, minutes)
                 break
 
@@ -365,11 +366,11 @@ def update_Items(manager_id):
         print(f"{i}  {j}  {k}")
     sr_no = int(input("Enter order id of item to be updated:"))
     print("\n\nInsert the details of item to be updated")
-    Sr_no = int(input("Enter order id:"))
+    # Sr_no = int(input("Enter order id:"))
     item = input("Enter item name:")
     price = float(input("Enter thr price of item:"))
-    sql1 = 'update ' + str(manager_id) + ' set Sr_no = %s, Item_no = %s, price = %s where Sr_no = %s;'
-    values = (str(Sr_no), item, str(price), str(sr_no))
+    sql1 = 'update ' + str(manager_id) + ' set Item_name = %s, price = %s where Sr_no = %s;'
+    values = (item, str(price), str(sr_no))
     cursor.execute(sql1, values)
     conn.commit()
     input("Updated Successfully......")
@@ -390,7 +391,7 @@ def remove_item(manager_id):
     sql1 = 'delete from ' + str(manager_id) + ' where Sr_no = ' + str(Sr_no) + ';'
     cursor.execute(sql1)
     conn.commit()
-    input("Item added successfully.......")
+    input("Item removed successfully.......")
 
 
 def bill_manager(manager_id):
